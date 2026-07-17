@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Flower Pot Dual Band Antenna Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>🌸 Pro Flower Pot Calculator</h1>
+            <p>Smart Synthesis Design Tool for Dual-Band VHF/UHF Antenna</p>
+        </header>
+
+        <div class="main-layout">
+            <!-- PANEL INPUT -->
+            <section class="card input-panel">
+                <h2>⚙️ Konfigurasi Parameter</h2>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="bandMode">Prioritas Frekuensi Utama</label>
+                        <select id="bandMode" onchange="toggleBandMode()">
+                            <option value="VHF" selected>VHF (Aplikasi Menghitung UHF)</option>
+                            <option value="UHF">UHF (Aplikasi Menghitung VHF)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label id="freqLabel" for="freqInput">Frekuensi VHF Kerja (MHz)</label>
+                        <input type="number" id="freqInput" value="144.50" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cableType">Tipe Kabel Koaksial</label>
+                        <select id="cableType" onchange="updateCableParameters()">
+                            <option value="RG58" selected>RG-58 (Solid PE)</option>
+                            <option value="RG8X">RG-8X / Mini 8 (Foam PE)</option>
+                            <option value="RG59">RG-59 (75 Ohm Video/Matching)</option>
+                            <option value="LMR200">LMR-200 (Low Loss)</option>
+                            <option value="LMR240">LMR-240 (Low Loss)</option>
+                            <option value="LMR400">LMR-400 (Heavy Duty)</option>
+                            <option value="CUSTOM">-- Spesifikasi Kustom Manual --</option>
+                        </select>
+                    </div>
+
+                    <div class="input-row-twin">
+						<div class="input-group">
+							<label for="impInput">Impedansi Kabel</label>
+							<input type="number" id="impInput" value="50" step="5" min="10" max="75">
+						</div>
+						<div class="input-group">
+							<label for="vfInput">Velocity Factor</label>
+							<input type="number" id="vfInput" value="0.66" step="0.01" min="0.50" max="0.99">
+						</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cableDia">Diameter Luar Kabel (mm)</label>
+                        <input type="number" id="cableDia" value="4.95" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+						<label for="pvcSelect">Ukuran Pipa PVC (Standard AW)</label>
+						<select id="pvcSelect" onchange="updatePvcParameters()">
+							<option value="1/2">Pipa 1/2" AW (OD: 22.0 mm)</option>
+							<option value="3/4" selected>Pipa 3/4" AW (OD: 26.0 mm)</option>
+							<option value="1">Pipa 1" AW (OD: 32.0 mm)</option>
+							<option value="1_1/2">Pipa 1 1/2" AW (OD: 48.0 mm)</option>
+							<option value="CUSTOM">-- Ukuran Pustom Manual --</option>
+						</select>
+					</div>
+
+					<div class="input-group">
+						<label for="pvcDia">Diameter Luar Pipa (mm)</label>
+						<input type="number" id="pvcDia" value="26.0" step="0.1" disabled>
+					<span class="stat-desc">*) Gunakan Tuning Fisik 0.985 jika target panjang elemen akhir Anda adalah setelah kabel dimasukkan ke dalam PVC.</span>
+					</div>
+
+                    <div class="input-group">
+                        <label for="tuningFactor">Faktor Tuning Fisik (0.97 - 1.00)</label>
+                        <input type="number" id="tuningFactor" value="0.985" step="0.001" min="0.970" max="1.000">
+					<span class="stat-desc">**) Gunakan Tuning Fisik 1.000 jika target panjang elemen akhir Anda adalah sebelum kabel dimasukkan ke dalam PVC.</span>
+                    </div>
+                </div>
+                <button id="btnCalculate" class="btn-primary" onclick="mainEngineCalculate()">⚡ Sintesis Desain Antena</button>
+            </section>
+
+            <!-- PANEL ESTIMASI & KARAKTERISTIK -->
+            <section class="card stats-panel">
+                <h2>📊 Analisis & Estimasi Karakteristik</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-title">Impedansi Antena</span>
+                        <span class="stat-value" id="estImpedance">- Ω</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-title">Estimasi SWR Awal</span>
+                        <span class="stat-value text-green" id="estSwr">1:-</span>
+                        <span class="stat-desc">Di frekuensi tengah rancangan</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-title">Estimasi Gain Teoritis</span>
+                        <span class="stat-value" id="estGainVhf">~1.8 dBi</span>
+                        <span class="stat-value" id="estGainUhf">~4.2 dBi</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-title">Bandwidth Kerja (SWR &lt; 1.5)</span>
+                        <span class="stat-value" id="estBandwidthVhf">VHF: ± - MHz</span>
+                        <span class="stat-value" id="estBandwidthUhf">UHF: ± - MHz</span>
+                    </div>
+                </div>
+			
+				<!-- Blok Analisis Integrasi Rentang Lebar Pita -->
+				<div class="analysis-box" style="margin-top: 16px; padding: 12px; background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
+					<h4 style="margin: 0 0 6px 0; color: #166534; font-size: 0.9rem;">🎯 ANALISIS INTEGRASI FREKUENSI KERJA RENTANG LEBAR PITA:</h4>
+					<p style="margin: 0; font-size: 0.85rem; color: #1e293b; line-height: 1.4;">
+						Rentang Frekuensi Operasional Acuan: <span id="analisisRx" style="font-weight: bold; color: #15803d;">-</span><br>
+						VHF Center: <span id="analisisVhf" style="font-weight: bold; color: #15803d;">-</span> | Rentang VHF: <span id="estRangeVhf" style="font-weight: bold; color: #15803d;">-</span><br>
+						UHF Center (Harmonik 3x): <span id="analisisUhf" style="font-weight: bold; color: #15803d;">-</span> | Rentang UHF: <span id="estRangeUhf" style="font-weight: bold; color: #15803d;">-</span>
+					</p>
+				</div>
+                
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="window.print()">🖨️ Cetak Blueprint</button>
+                    <button class="btn-secondary" onclick="exportToCSV()">💾 Ekspor Data CSV</button>
+                </div>
+            </section>
+        </div>
+
+		<div class="card alert-box" id="warning75Ohm">
+			⚠️ <b>Panduan Khusus Konstruksi Kabel 75 Ohm:</b><br>
+			Karena material 75 Ohm (RG-59/RG-6) ini digunakan untuk bahan antena, pasang Konektor Kabel / RF Connector (Tipe PL-259 Male atau BNC) dengan jarak <b><span id="resStubLength">-</span></b> dari Choke Balun (Winding).
+		</div>
+
+        <div class="secondary-layout">
+            <!-- PANEL HASIL UKURAN -->
+            <section class="card output-panel">
+                <h2>📏 Spesifikasi Dimensi Pemotongan</h2>
+                <div class="output-list">
+                    <div class="output-item"><span>Frekuensi Target Pasangan:</span><strong id="outHarmonic">433.50 MHz</strong></div>
+                    <div class="output-item"><span>Elemen Atas (A) - Inti Telanjang:</span><strong id="outElemAtas">45.4 cm</strong></div>
+                    <div class="output-item"><span>Elemen Bawah (B) - Koaksial Utuh:</span><strong id="outElemBawah">44.3 cm</strong></div>
+                    <div class="output-item"><span>Sleeve Aluminium Foil (Panjang):</span><strong id="outSleevePanjang">23.6 cm</strong></div>
+                    <div class="output-item"><span>Lebar Pemotongan Keliling Foil:</span><strong id="outSleeveLebar">8.4 cm</strong></div>
+                    <div class="output-item"><span>Posisi Foil Semu (Atas & Bawah):</span><strong id="outSleevePos">Masing-masing 11.8 cm dari pusat</strong></div>
+                    <div class="output-item"><span>Choke Balun (Winding):</span><strong id="outChokeTurns">9 Lilitan Rapat</strong></div>
+					<!-- Tambahkan baris baru di bawah ini -->
+					<div class="output-item"><span>Panjang Kabel Khusus Balun:</span><strong id="outChokeLength">- cm</strong></div>
+                    <div class="output-item"><span>Total Panjang Radiator Aktif:</span><strong id="outTinggiAktif">89.7 cm</strong></div>
+                    <div class="output-item"><span>Tinggi Total Fisik Struktur:</span><strong id="outTinggiFisik">105.0 cm</strong></div>
+                    <div class="output-item"><span>Minimal Kebutuhan Kabel Koaksial:</span><strong id="outKabelButuh">2.5 Meter</strong></div>
+                </div>
+            </section>
+
+            <!-- DIAGRAM INTERAKTIF SVG -->
+            <section class="card diagram-panel">
+                <h2>🎨 Cetak Biru Geometris (Skala Adaptif)</h2>
+                <div class="svg-container" id="svgWrapper">
+                    <!-- SVG di-inject secara dinamis oleh JavaScript -->
+                </div>
+                
+                <!-- WADAH BARU UNTUK PANDUAN BOR TEPAT DI BAWAH SVG -->
+                <div id="drillGuideWrapper" style="margin-top: 16px;">
+                    <!-- Data panduan titik bor akan di-inject lewat JavaScript -->
+                </div>
+            </section>
+        </div>
+
+        <!-- BILL OF MATERIAL -->
+        <section class="card bom-panel">
+            <h2>🛒 Bill of Materials (BOM) & Daftar Belanja Komponen</h2>
+            <table class="bom-table" id="bomTable">
+                <thead>
+                    <tr>
+                        <th>Nama Komponen / Bahan</th>
+                        <th>Spesifikasi Teknis Aturan Main</th>
+                        <th>Estimasi Kuantitas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Diisi otomatis oleh engine js -->
+                </tbody>
+            </table>
+        </section>
+		<footer style="text-align: center; padding: 20px; background-color: #f1f1f1;">
+			<p>&copy; <script>document.write(new Date().getFullYear());</script> Trojanspot. All rights reserved.</p>
+		</footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
