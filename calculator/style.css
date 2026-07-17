@@ -1,0 +1,378 @@
+/* ==========================================================================
+   Tema Aplikasi Profesional - Pro Flower Pot Calculator
+   ========================================================================== */
+
+:root {
+    --bg-app: #f0f4f8;
+    --bg-card: #ffffff;
+    --primary: #1e3a8a;
+    --primary-hover: #1d4ed8;
+    --secondary: #0f766e;
+    --secondary-hover: #115e59;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #16a34a;
+    --accent: #d97706;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    line-height: 1.5;
+    padding: 16px;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.app-header {
+    text-align: center;
+    padding: 16px 0;
+    background: linear-gradient(135deg, var(--primary), #3b82f6);
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.app-header p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Tata Letak Kartu */
+.card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
+}
+
+.card h2 {
+    font-size: 1.15rem;
+    color: var(--primary);
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.main-layout, .secondary-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .main-layout, .secondary-layout {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Form Input */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+@media (min-width: 480px) {
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.input-group input, .input-group select {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: #f8fafc;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus, .input-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: #fff;
+}
+
+/* Tombol */
+.btn-primary {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.btn-secondary {
+    flex: 1;
+    padding: 10px;
+    background-color: #f1f5f9;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: var(--border);
+}
+
+/* Panel Statistik & Output */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.stat-box {
+    background-color: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid var(--secondary);
+}
+
+.stat-title {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 2px 0;
+}
+
+.text-green { color: var(--success); }
+
+.stat-desc {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.output-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.output-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border);
+    font-size: 0.9rem;
+}
+
+.output-item:last-child {
+    border-bottom: none;
+}
+
+.output-item span {
+    color: var(--text-muted);
+}
+
+.output-item strong {
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+/* Panel Diagram SVG - Diubah menjadi Terang & Bersih */
+.svg-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff; /* Latar belakang putih bersih */
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 380px;
+    border: 1px solid var(--border); /* Memberi border tipis di sekeliling gambar */
+}
+
+/* Tabel BOM */
+.bom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.bom-table th, .bom-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.bom-table th {
+    background-color: #f8fafc;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.bom-table tr:hover {
+    background-color: #f8fafc;
+}
+
+/* ==========================================================================
+   Desain Kotak Peringatan Khusus Kabel 75 Ohm (Matching Stub Warning)
+   ========================================================================== */
+
+.alert-box {
+    display: none; /* Disembunyikan secara default, diaktifkan via JS jika memilih RG59 */
+    background-color: #fffbeb; /* Warna dasar kuning gading lembut */
+    border: 1.5px solid #f59e0b; /* Border warna amber/oranye keselamatan */
+    border-left: 6px solid #d97706; /* Garis aksen vertikal kiri yang tebal */
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    color: #78350f; /* Warna teks cokelat gelap agar kontras dan nyaman di mata */
+    font-size: 0.88rem;
+    line-height: 1.5;
+    box-shadow: 0 2px 4px rgba(217, 119, 6, 0.05);
+}
+
+/* Mengatur gaya penekanan teks penting di dalam kotak alert */
+.alert-box b {
+    color: #92400e;
+    font-size: 0.95rem;
+}
+
+/* Mengatur daftar urutan instruksi di dalam alert */
+.alert-box br + br + b + br {
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Gaya khusus untuk angka sentimeter agar terlihat mencolok */
+#resStubLength {
+    background-color: #fef3c7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #fcd34d;
+    font-weight: 800;
+    color: #b45309;
+    font-family: monospace;
+    font-size: 0.95rem;
+}
+
+/* Mengatur baris kembar agar sejajar secara horizontal */
+.input-row-twin {
+    display: flex;
+    gap: 12px;          /* Jarak jeda antar kotak input */
+    /*grid-column: span 2; /* Memastikan baris kembar ini memakan ruang penuh jika di dalam CSS Grid */
+}
+
+.input-row-twin .input-group {
+    flex: 1;            /* Membagi lebar ruang secara adil 50:50 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Optimasi responsif untuk layar HP kecil */
+@media (max-width: 480px) {
+    .input-row-twin {
+        flex-direction: column; /* Otomatis kembali bertumpuk vertikal jika layar terlalu sempit */
+        gap: 8px;
+    }
+}
+
+/* Pengaturan Cetak Halaman (Print) */
+@media print {
+    body {
+        background-color: #fff;
+        padding: 0;
+    }
+    .card {
+        box-shadow: none;
+        border: none;
+        padding: 10px 0;
+    }
+    .btn-primary, .action-buttons, .input-panel {
+        display: none !important;
+    }
+    .main-layout, .secondary-layout {
+        display: block;
+    }
+    .svg-container {
+        background-color: #fff;
+        border: 1px solid #ccc;
+    }
+    svg text {
+        fill: #000 !important;
+    }
+    .alert-box {
+        background-color: #fff !important;
+        border: 1px solid #000 !important;
+        border-left: 4px solid #000 !important;
+        color: #000 !important;
+        box-shadow: none !important;
+    }
+    #resStubLength {
+        background-color: #eee !important;
+        border: 1px solid #000 !important;
+        color: #000 !important;
+    }
+}
